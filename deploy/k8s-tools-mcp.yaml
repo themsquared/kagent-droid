@@ -1,0 +1,15 @@
+# The Droid's Kubernetes access: kagent-tools (read-only), installed with
+#   helm --kube-context kind-kagent-ent upgrade --install droid-k8s-tools \
+#     oci://ghcr.io/kagent-dev/tools/helm/kagent-tools --version 0.3.0 \
+#     -n kagent -f deploy/k8s-tools-values.yaml --wait
+apiVersion: kagent.dev/v1alpha3
+kind: RemoteMCPServer
+metadata:
+  name: k8s-tools
+  namespace: kagent
+spec:
+  description: Read-only Kubernetes, Helm and utility tools (kagent-tools 0.3.0) for the devops Droid.
+  protocol: STREAMABLE_HTTP
+  url: http://droid-k8s-tools.kagent.svc.cluster.local:8084/mcp
+  timeout: 30s
+  terminateOnClose: true

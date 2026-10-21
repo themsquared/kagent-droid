@@ -1,0 +1,24 @@
+# Factory Droid runtime for kagent (byo). Admits AgentTemplates labelled
+# kagent.dev/runtime=droid. The image is pinned by digest (tags are rejected).
+apiVersion: kagent.dev/v1alpha3
+kind: Harness
+metadata:
+  name: droid
+  namespace: kagent
+spec:
+  byo: {}
+  allowedAgentTemplates:
+    selector:
+      matchLabels:
+        kagent.dev/runtime: droid
+  workload:
+    image: 172.20.0.8:5000/kagent-droid@sha256:9e99804109f05a51268cfb4639f743a3a42232ccec574542f15426279a58d1f7
+    command: ["/usr/local/bin/droid-harness"]
+  env:
+    - name: DROID_AUTONOMY
+      value: high
+  substrate:
+    workerPoolRef:
+      name: kagent-default
+    snapshotPolicy:
+      location: gs://ate-snapshots/kagent/

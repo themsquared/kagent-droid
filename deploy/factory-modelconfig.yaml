@@ -1,0 +1,17 @@
+# Factory credential, injected by the Substrate egress gateway. The Actor only
+# sees a placeholder; the gateway allows https://api.factory.ai and swaps the
+# real key into "Authorization: Bearer" on the way out.
+#   kubectl -n kagent create secret generic factory-api-key \
+#     --from-literal=FACTORY_API_KEY=fk-...
+apiVersion: kagent.dev/v1alpha3
+kind: ModelConfig
+metadata:
+  name: factory-droid
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: claude-haiku-4-5
+  apiKeySecret: factory-api-key
+  apiKeySecretKey: FACTORY_API_KEY
+  openAI:
+    baseUrl: https://api.factory.ai

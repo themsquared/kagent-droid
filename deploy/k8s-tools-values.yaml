@@ -1,0 +1,16 @@
+# kagent-tools (oci://ghcr.io/kagent-dev/tools/helm/kagent-tools 0.3.0) as the
+# Droid's Kubernetes access: read-only ClusterRole (get/list/watch, no Secrets)
+# plus --read-only, which turns off write tools in the server itself.
+fullnameOverride: droid-k8s-tools
+rbac:
+  create: true
+  readOnly: true
+  allowSecrets: false
+tools:
+  # The chart's default metrics port equals the MCP port, which declares 8084
+  # twice in the Deployment and fails server-side apply. Give metrics its own.
+  metrics:
+    port: 8085
+  loglevel: info
+  enabledTools: [k8s, helm, utils]
+  args: ["--read-only"]

@@ -1,0 +1,26 @@
+# droid talks to two Factory hosts during a turn: api.factory.ai (allowed and
+# credential-injected by factory-modelconfig.yaml) and prem.factory.ai.
+# Substrate only opens origins that a ModelConfig or RemoteMCPServer declares,
+# and credential injection needs an exact hostname, so prem.factory.ai gets its
+# own entry here. It is not an MCP server: the droid harness leaves *.factory.ai
+# entries out of droid's MCP config, and ACCEPTED=False on it is expected.
+#
+# The gateway swaps droid's placeholder bearer token for the full header value
+# in factory-prem-auth, which must be "Bearer <same key as factory-api-key>".
+# Create it from the existing Secret without printing the key:
+#   { printf 'Bearer '; kubectl --context kind-kagent-ent -n kagent get secret factory-api-key \
+#       -o jsonpath='{.data.FACTORY_API_KEY}' | base64 -d; } \
+#     | kubectl --context kind-kagent-ent -n kagent create secret generic factory-prem-auth \
+#       --from-file=Authorization=/dev/stdin
+apiVersion: kagent.dev/v1alpha3
+kind: RemoteMCPServer
+metadata:
+  name: factory-prem-egress
+  namespace: kagent
+spec:
+  description: Egress and credential binding for prem.factory.ai (droid model traffic). Not an MCP server.
+  protocol: STREAMABLE_HTTP
+  url: https://prem.factory.ai/
+  headersFrom:
+    - name: Authorization
+      valueFrom: {type: Secret, name: factory-prem-auth, key: Authorization}
