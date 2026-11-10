@@ -1,5 +1,7 @@
 # kagent-droid
 
+> 📖 **Read the write-up:** [Running Factory Droid as a kagent Agent on Agent Substrate](https://webofmike.com/factory-droid-kagent-substrate/)
+
 Factory's Droid as a kagent `byo` agent for DevOps and platform engineering
 work.
 
